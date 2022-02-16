@@ -1,10 +1,9 @@
 from rest_framework import viewsets
 from .models import Profile, Attendance
-from .serializers import ProfileSerializer, AttendanceSerializer
+from .serializers import UserSerializer, ProfileSerializer, AttendanceSerializer
 from .permissions import UserPermission, ProfilePermission, AttendancePermission
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
-from djoser.serializers import UserSerializer # if in the first release there is no need for djoser, djoser will be removed
 
 class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
