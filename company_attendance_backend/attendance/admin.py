@@ -4,4 +4,7 @@ from .models import Profile, Attendance
 # Register your models here.
 
 admin.site.register(Profile)
-admin.site.register(Attendance)
+
+class AttendanceAdmin(admin.ModelAdmin):
+	list_display = ['__str__', 'time_in', 'time_out']
+admin.site.register(Attendance, AttendanceAdmin)

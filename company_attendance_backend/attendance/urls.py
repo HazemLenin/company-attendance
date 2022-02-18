@@ -1,11 +1,16 @@
 from django.urls import path, include
 from rest_framework import routers
-from .api import UserViewSet, ProfileViewSet, AttendanceViewSet
+from . import api
 
 router = routers.SimpleRouter()
 
-router.register('users', UserViewSet)
-router.register('profiles', ProfileViewSet)
-router.register('attendances', AttendanceViewSet)
+router.register('users', api.UserViewSet)
+router.register('profiles', api.ProfileViewSet)
+router.register('attendances', api.AttendanceViewSet)
 
-urlpatterns = router.urls
+urlpatterns = [
+	path('me/', api.Me.as_view()),
+	path('dashboard/', api.ManagerDashboard.as_view()),
+]
+
+urlpatterns += router.urls

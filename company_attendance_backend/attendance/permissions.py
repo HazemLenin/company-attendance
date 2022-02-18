@@ -3,17 +3,20 @@ from .models import Profile, Attendance
 from django.contrib.auth.models import User
 
 class UserPermission(BasePermission):
+	
 	def has_permission(self, request, view, *args, **kwargs):
 
 		assert request.user.groups.first(), 'User has problem with his category/group.'
 
-		if request.user.groups.first().name == 'managers':
+		user_group = request.user.groups.first()
+
+		if user_group.name == 'managers':
 			return True # treated as superusers
 
-		elif request.user.groups.first().name == 'receptionists' and view.action in ['list', 'retrieve']:
+		elif user_group.name == 'receptionists' and view.action in ['list', 'retrieve']:
 			return True
 
-		elif request.user.groups.first().name == 'employees' and view.action in ['list', 'retrieve']:
+		elif user_group.name == 'employees' and view.action in ['list', 'retrieve']:
 			view.queryset = User.objects.filter(id=request.user.id)
 			return True
 			
@@ -21,17 +24,20 @@ class UserPermission(BasePermission):
 			return False
 
 class ProfilePermission(BasePermission):
+	
 	def has_permission(self, request, view, *args, **kwargs):
 
 		assert request.user.groups.first(), 'User has problem with his category/group.'
 
-		if request.user.groups.first().name == 'managers':
+		user_group = request.user.groups.first()
+
+		if user_group.name == 'managers':
 			return True
 
-		elif request.user.groups.first().name == 'receptionists' and view.action in ['list', 'retrieve']:
+		elif user_group.name == 'receptionists' and view.action in ['list', 'retrieve']:
 			return True
 
-		elif request.user.groups.first().name == 'employees' and view.action in ['list', 'retrieve']:
+		elif user_group.name == 'employees' and view.action in ['list', 'retrieve']:
 			view.queryset = Profile.objects.filter(user=request.user)
 			return True
 			
@@ -41,19 +47,35 @@ class ProfilePermission(BasePermission):
 
 
 class AttendancePermission(BasePermission):
+	
 	def has_permission(self, request, view, *args, **kwargs):
 
 		assert request.user.groups.first(), 'User has problem with his category/group.'
 
-		if request.user.groups.first().name == 'managers':
+		user_group = request.user.groups.first()
+
+		if user_group.name == 'managers':
 			return True
 
-		elif request.user.groups.first().name == 'receptionists' and view.action in ['list', 'retrieve', 'create', 'update', 'partial_update']:
+		elif user_group.name == 'receptionists' and view.action in ['list', 'retrieve', 'create', 'update', 'partial_update']:
 			return True
 
-		elif request.user.groups.first().name == 'employees' and view.action in ['list', 'retrieve']:
+		elif user_group.name == 'employees' and view.action in ['list', 'retrieve']:
 			view.queryset = Attendance.objects.filter(user=request.user)
 			return True
 
+		else:
+			return False
+
+class IsManager(BasePermission):
+	
+	def has_permission(self, request, view, *args, **kwargs):
+
+		assert request.user.groups.first(), 'User has problem with his category/group.'
+
+		user_group = request.user.groups.first()
+
+		if user_group.name == 'managers':
+			return True
 		else:
 			return False

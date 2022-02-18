@@ -18,6 +18,7 @@ class Profile(models.Model, CustomModel):
 	birth_date = models.DateField()
 	address = models.CharField(max_length=20)
 	phone = models.CharField(max_length=20)
+	in_company = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.user.username
@@ -26,7 +27,7 @@ class Profile(models.Model, CustomModel):
 class Attendance(models.Model, CustomModel):
 	user = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='attendances')
 	time_in = models.DateTimeField()
-	time_out = models.DateTimeField()
+	time_out = models.DateTimeField(blank=True, null=True)
 
 	def __str__(self):
 		return self.user.username

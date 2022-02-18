@@ -4,13 +4,10 @@ from django.contrib.auth.models import User
 from django.conf import settings
 
 class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = tuple(User.REQUIRED_FIELDS) + (
-            'id',
-            'username',
-        )
-        read_only_fields = ('username',)
+	role = serializers.CharField(source="groups.first")
+	class Meta:
+		model = User
+		fields = ('id', 'username', 'email', 'first_name', 'last_name', 'role')
 
 class ProfileSerializer(serializers.ModelSerializer):
 	class Meta:
