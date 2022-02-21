@@ -4,4 +4,7 @@ export { default as Logout } from './Logout';
 export { default as ManagerDashboard } from './ManagerDashboard';
 export { default as Profile } from './Profile';
 export { default as Employees } from './Employees';
+export { default as NewEmployee } from './NewEmployee';
+export { default as Employee } from './Employee';
+export { default as EditEmployee } from './EditEmployee';
 export { default as PageNotFound } from './PageNotFound';

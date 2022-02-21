@@ -1,3 +1,18 @@
+// authTokens reducer
+
+export function set_tokens(data) {
+    return {
+        type: 'SET_TOKENS',
+        payload: data
+    }
+}
+
+export function remove_tokens() {
+    return {
+        type: 'REMOVE_TOKENS',
+    }
+}
+
 // isAuthenticated reducer
 
 export function login_user(data) {

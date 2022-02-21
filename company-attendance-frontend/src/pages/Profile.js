@@ -1,12 +1,17 @@
 import React from 'react';
 import { Container, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 function Profile() {
     const user = useSelector(state => state.user);
-    const profile = useSelector(state => state.profile);
   return (
       <Container>
+            <h1>
+                <FontAwesomeIcon icon={faUser} className="me-2" />
+                Profile
+            </h1>
           <Table striped bordered hover>
               <tbody>
                 <tr>
@@ -18,7 +23,7 @@ function Profile() {
                     <td>{user.email}</td>
                 </tr>
                 <tr>
-                    <td>First name:</td>
+                    <td>First Name:</td>
                     <td>{user.first_name}</td>
                 </tr>
                 <tr>
@@ -30,16 +35,16 @@ function Profile() {
                     <td>{user.role}</td>
                 </tr>
                 <tr>
-                    <td>Birth date:</td>
-                    <td>{profile.birth_date}</td>
+                    <td>Birth Date:</td>
+                    <td>{user.profile.birth_date}</td>
                 </tr>
                 <tr>
                     <td>Address:</td>
-                    <td>{profile.address}</td>
+                    <td>{user.profile.address}</td>
                 </tr>
                 <tr>
-                    <td>Phone numbaer:</td>
-                    <td>{profile.phone}</td>
+                    <td>Phone Numbaer:</td>
+                    <td>{user.profile.phone}</td>
                 </tr>
             </tbody>
           </Table>

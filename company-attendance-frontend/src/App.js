@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import {
@@ -14,23 +14,50 @@ import {
   Profile,
   ManagerDashboard,
   PageNotFound,
-  Employees
+  Employees,
+  NewEmployee,
+  Employee,
+  EditEmployee,
 } from './pages';
 import PrivateRoute from './PrivateRoute';
 import { useDispatch, useSelector } from 'react-redux';
-import { setup_user_and_profile } from './services';
+import { load_user } from './actions';
+import useAxios from './hooks/useAxios';
 
 function App() {
   // once authentication status is true, setup profile without using localState
   const isAuthenticated = useSelector(state => state.isAuthenticated);
+  const [ isLoading, setIsLoading ] = useState(true);
   const dispatch = useDispatch();
-
+  const api = useAxios();
+  
   useEffect(() => {
+    /*
+      if user is authenticated, setup profile, and setup profile function will handle loading state
+      but if user isn't authenticated, turn off loading state to show the app
+    */
     if (isAuthenticated) {
-      setup_user_and_profile();
+      api.get('/api/me/')
+      .then(response => {
+          dispatch(load_user(response.data));
+          setIsLoading(false);
+      })
+      .catch(err => {
+          console.log(err)
+      })
+    } else {
+      setIsLoading(false);
     }
   
-  }, [isAuthenticated])
+  }, [isAuthenticated, api, dispatch]);
+
+  if (isLoading) {
+    return (
+      <div className="loading-wrapper">
+        <h1>Loading...</h1>
+      </div>
+    )
+  }
   
   return (
     <BrowserRouter>
@@ -56,6 +83,24 @@ function App() {
           <Route exact path="/employees" element={
             <PrivateRoute roles={["managers", "receptionists"]}>
               <Employees />
+            </PrivateRoute>
+          } />
+
+          <Route exact path="/employees/new" element={
+            <PrivateRoute roles={["managers"]}>
+              < NewEmployee />
+            </PrivateRoute>
+          } />
+
+          <Route exact path="/employees/:id" element={
+            <PrivateRoute roles={["managers", "receptionists"]}>
+              < Employee />
+            </PrivateRoute>
+          } />
+
+          <Route exact path="/employees/:id/edit" element={
+            <PrivateRoute roles={["managers", "receptionists"]}>
+              < EditEmployee />
             </PrivateRoute>
           } />
 

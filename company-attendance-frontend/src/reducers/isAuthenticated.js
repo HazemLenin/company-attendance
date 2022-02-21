@@ -1,17 +1,14 @@
-let initialState = localStorage.getItem('AuthToken') ? true : false;
+let initialState = localStorage.getItem('authTokens') ? true : false;
 
 function isAuthenticatedReducer(state = initialState, action) {
+    /* Normal reducer that checks if there is a token or not */
     switch (action.type) {
 
         case 'LOGIN':
 
-            localStorage.setItem('AuthToken', JSON.stringify(action.payload));
-
             return true;
 
         case 'LOGOUT':
-
-            localStorage.removeItem('AuthToken');
 
             return false;
 

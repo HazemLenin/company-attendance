@@ -1,69 +1,67 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Form, Button, Spinner } from 'react-bootstrap';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { login_user } from '../actions';
-import { setup_user_and_profile } from '../services';
+import { login_user, set_tokens } from '../actions';
+import useAxios from '../hooks/useAxios';
 
 function Login() {
-    const isAuthenticated = useSelector(state => state.isAuthenticated);
+    const authTokens = useSelector(state => state.authTokens);
     const dispatch = useDispatch();
-    const username = useRef();
-    const password = useRef();
-    const [ Err, setErr ] = useState('');
-    const [ usernameErr, setUsernameErr ] = useState('');
-    const [ passwordErr, setPasswordErr ] = useState('');
-    const [ loading, setLoading ] = useState(false);
-    const navigate = useNavigate()
 
-    function SubmitData(e) {
+    const [ username, setUsername ] = useState('');
+    const [ password, setPassword ] = useState('');
+
+    const [ validated, setValidated ] = useState(false);
+
+    const [ errors, setErrors ] = useState({ detail: '', username: '', password: '' });
+    const [ loading, setLoading ] = useState(false);
+    const navigate = useNavigate();
+    const api = useAxios({includeTokens: false});
+
+    function handleSubmit(e) {
         e.preventDefault();
-        setErr('');
-        setUsernameErr('');
-        setPasswordErr('');
+
+        setErrors({ detail: '', username: '', password: '' });
+
         setLoading(true);
-        axios.post('api/token/', {
-            username: username.current.value,
-            password: password.current.value
+
+        api.post('/api/token/', {
+            username: username,
+            password: password
         })
         .then(response => {
             setLoading(false);
-            const data = response.data;
-            dispatch(login_user(data));
+            dispatch(login_user()); // And the user will be loaded because of changing the isAuthenticated state
+            dispatch(set_tokens(response.data));
             navigate('/');
         })
         .catch(err => {
-            try{
-                if (err.response.data.username) setUsernameErr(err.response.data.username);
-                else if (err.response.data.password) setPasswordErr(err.response.data.password);
-                else setErr(err.response.data.detail);
-            } catch {
-                setErr('Error happend!');
-            }
+            setErrors(err.response?.data);
             setLoading(false);
+            setValidated(true);
         })
     }
     return (
         <Container>
             <h1>Login</h1>
-            { Err && <p className="text-danger">{ Err }</p> }
-            { isAuthenticated ? 
+            <p className="text-danger">{ errors?.detail }</p>
+            { authTokens ? 
                 <Container><h1>You already logged in</h1></Container>
             :
-                <Form onSubmit={SubmitData}>
-                    <Form.Group>
+                <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                    <Form.Group className="mb-2">
                         <Form.Label>Username</Form.Label>
-                        <Form.Control ref={username} name="username" required/>
-                        { usernameErr && <p className="text-danger">{ usernameErr }</p> }
+                        <Form.Control type="text" name="username" placeholder="Username" onChange={ e => setUsername(e.target.value)} required/>
+                        <Form.Control.Feedback type="invalid">{ errors?.username }</Form.Control.Feedback>
                     </Form.Group>
-                    <Form.Group>
+                    <Form.Group className="mb-2">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control ref={password} name="password" type="password" required/>
-                        { passwordErr && <p className="text-danger">{ passwordErr }</p> }
+                        <Form.Control type="password" name="password" placeholder="Password" onChange={ e => setPassword(e.target.value)} required/>
+                        <Form.Control.Feedback type="invalid">{ errors?.password }</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group>
-                        <Button type="submit" className="mt-3">
+                        <Button type="submit">
                             Login
                             {loading && <Spinner animation="border" size="sm" /> }
                         </Button>

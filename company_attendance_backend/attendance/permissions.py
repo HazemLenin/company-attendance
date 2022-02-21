@@ -1,81 +1,83 @@
 from rest_framework.permissions import BasePermission
-from .models import Profile, Attendance
-from django.contrib.auth.models import User
+from .models import User, Profile, Attendance
+
 
 class UserPermission(BasePermission):
-	
-	def has_permission(self, request, view, *args, **kwargs):
 
-		assert request.user.groups.first(), 'User has problem with his category/group.'
+    def has_permission(self, request, view, *args, **kwargs):
 
-		user_group = request.user.groups.first()
+        assert request.user.groups.first(), 'User has problem with his category/group.'
 
-		if user_group.name == 'managers':
-			return True # treated as superusers
+        user_group = request.user.groups.first()
 
-		elif user_group.name == 'receptionists' and view.action in ['list', 'retrieve']:
-			return True
+        if user_group.name == 'managers':
+            return True  # treated as superusers
 
-		elif user_group.name == 'employees' and view.action in ['list', 'retrieve']:
-			view.queryset = User.objects.filter(id=request.user.id)
-			return True
-			
-		else:
-			return False
+        elif user_group.name == 'receptionists' and view.action in ['list', 'retrieve']:
+            return True
+
+        elif user_group.name == 'employees' and view.action in ['list', 'retrieve']:
+            view.queryset = User.objects.filter(id=request.user.id)
+            return True
+
+        else:
+            return False
+
 
 class ProfilePermission(BasePermission):
-	
-	def has_permission(self, request, view, *args, **kwargs):
 
-		assert request.user.groups.first(), 'User has problem with his category/group.'
+    def has_permission(self, request, view, *args, **kwargs):
 
-		user_group = request.user.groups.first()
+        assert request.user.groups.first(), 'User has problem with his category/group.'
 
-		if user_group.name == 'managers':
-			return True
+        user_group = request.user.groups.first()
 
-		elif user_group.name == 'receptionists' and view.action in ['list', 'retrieve']:
-			return True
+        if user_group.name == 'managers':
+            return True
 
-		elif user_group.name == 'employees' and view.action in ['list', 'retrieve']:
-			view.queryset = Profile.objects.filter(user=request.user)
-			return True
-			
-		else:
-			return False
+        elif user_group.name == 'receptionists' and view.action in ['list', 'retrieve']:
+            return True
 
+        elif user_group.name == 'employees' and view.action in ['list', 'retrieve']:
+            view.queryset = Profile.objects.filter(user=request.user)
+            return True
+
+        else:
+            return False
 
 
 class AttendancePermission(BasePermission):
-	
-	def has_permission(self, request, view, *args, **kwargs):
 
-		assert request.user.groups.first(), 'User has problem with his category/group.'
+    def has_permission(self, request, view, *args, **kwargs):
 
-		user_group = request.user.groups.first()
+        assert request.user.groups.first(), 'User has problem with his category/group.'
 
-		if user_group.name == 'managers':
-			return True
+        user_group = request.user.groups.first()
 
-		elif user_group.name == 'receptionists' and view.action in ['list', 'retrieve', 'create', 'update', 'partial_update']:
-			return True
+        if user_group.name == 'managers':
+            return True
 
-		elif user_group.name == 'employees' and view.action in ['list', 'retrieve']:
-			view.queryset = Attendance.objects.filter(user=request.user)
-			return True
+        elif user_group.name == 'receptionists' and view.action in ['list', 'retrieve', 'create', 'update',
+                                                                    'partial_update']:
+            return True
 
-		else:
-			return False
+        elif user_group.name == 'employees' and view.action in ['list', 'retrieve']:
+            view.queryset = Attendance.objects.filter(user=request.user)
+            return True
+
+        else:
+            return False
+
 
 class IsManager(BasePermission):
-	
-	def has_permission(self, request, view, *args, **kwargs):
 
-		assert request.user.groups.first(), 'User has problem with his category/group.'
+    def has_permission(self, request, view, *args, **kwargs):
 
-		user_group = request.user.groups.first()
+        assert request.user.groups.first(), 'User has problem with his category/group.'
 
-		if user_group.name == 'managers':
-			return True
-		else:
-			return False
+        user_group = request.user.groups.first()
+
+        if user_group.name == 'managers':
+            return True
+        else:
+            return False

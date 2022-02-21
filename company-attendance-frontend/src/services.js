@@ -1,16 +1,10 @@
 import axios from 'axios';
 import store from './store';
 import { load_user, load_profile } from './actions';
+import useAxios from './hooks/useAxios';
 
-// export function refresh_token(){}
-
-export function setup_user_and_profile() {
-    axios.get('api/me/', {headers: {Authorization: ` Bearer ${JSON.parse(localStorage.getItem('AuthToken')).access}`}})
-    .then(response => {
-        store.dispatch(load_user(response.data.user));
-        store.dispatch(load_profile(response.data.profile));
-    })
-    .catch(err => {
-        console.log(err)
-    })
+// used when login
+export function fetch_token({ username, password }) {
 }
+
+export function create_employee_user({}) {}
