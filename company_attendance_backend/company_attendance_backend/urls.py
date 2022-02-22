@@ -20,11 +20,22 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+# from rest_framework.routers import DefaultRouter
+# from django_rest_passwordreset.urls import add_reset_password_urls_to_router
+#
+# router = DefaultRouter()
+# add_reset_password_urls_to_router(router, base_path='api/auth/passwordreset')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
+    path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+
     path('api/', include('attendance.urls'))
 ]
+
+# urlpatterns += router.urls
+

@@ -15,6 +15,7 @@ from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATE_DIR = Path(__file__).resolve().parent.parent / 'templates'
 
 
 # Quick-start development settings - unsuitable for production
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
+    'django_rest_passwordreset'
 ]
 
 MIDDLEWARE = [
@@ -60,7 +62,7 @@ ROOT_URLCONF = 'company_attendance_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,6 +137,7 @@ ROLE_GROUPS = [
 ]
 
 AUTH_USER_MODEL = 'attendance.User'
+
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",

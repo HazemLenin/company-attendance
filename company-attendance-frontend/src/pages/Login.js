@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Container, Form, Button, Spinner } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { login_user, set_tokens } from '../actions';
 import useAxios from '../hooks/useAxios';
 
 function Login() {
-    const authTokens = useSelector(state => state.authTokens);
+    const isAuthenticated = useSelector(state => state.isAuthenticated);
     const dispatch = useDispatch();
 
     const [ username, setUsername ] = useState('');
@@ -46,27 +46,30 @@ function Login() {
         <Container>
             <h1>Login</h1>
             <p className="text-danger">{ errors?.detail }</p>
-            { authTokens ? 
+            { isAuthenticated ? 
                 <Container><h1>You already logged in</h1></Container>
             :
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                    <Form.Group className="mb-2">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control type="text" name="username" placeholder="Username" onChange={ e => setUsername(e.target.value)} required/>
-                        <Form.Control.Feedback type="invalid">{ errors?.username }</Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group className="mb-2">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" name="password" placeholder="Password" onChange={ e => setPassword(e.target.value)} required/>
-                        <Form.Control.Feedback type="invalid">{ errors?.password }</Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group>
-                        <Button type="submit">
-                            Login
-                            {loading && <Spinner animation="border" size="sm" /> }
-                        </Button>
-                    </Form.Group>    
-                </Form>
+                <>
+                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                        <Form.Group className="mb-2">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="text" name="username" placeholder="Username" onChange={ e => setUsername(e.target.value)} required/>
+                            <Form.Control.Feedback type="invalid">{ errors?.username }</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" name="password" placeholder="Password" onChange={ e => setPassword(e.target.value)} required/>
+                            <Form.Control.Feedback type="invalid">{ errors?.password }</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group>
+                            <Button type="submit">
+                                Login
+                                {loading && <Spinner animation="border" size="sm" /> }
+                            </Button>
+                        </Form.Group>    
+                    </Form>
+                    <Link to="/password_reset">Forgot password?</Link>
+                </>
             }
         </Container>
     )

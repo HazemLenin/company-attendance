@@ -11,6 +11,8 @@ import {
   Home,
   Login,
   Logout,
+  PasswordReset,
+  PasswordResetConfirm,
   Profile,
   ManagerDashboard,
   PageNotFound,
@@ -23,7 +25,6 @@ import PrivateRoute from './PrivateRoute';
 import { useDispatch, useSelector } from 'react-redux';
 import { load_user } from './actions';
 import useAxios from './hooks/useAxios';
-
 function App() {
   // once authentication status is true, setup profile without using localState
   const isAuthenticated = useSelector(state => state.isAuthenticated);
@@ -67,12 +68,17 @@ function App() {
           <Route exact path="/" element={<Home />} />
 
           <Route exact path="/login" element={<Login />} />
+          
+          <Route exact path="/password_reset" element={<PasswordReset />} />
+
+          <Route exact path="/password_reset/confirm" element={<PasswordResetConfirm />} />
 
           <Route exact path="/logout" element={
             <PrivateRoute>
               <Logout />
             </PrivateRoute>
           } />
+
 
           <Route exact path="/dashboard" element={
             <PrivateRoute roles={["managers",]}>
