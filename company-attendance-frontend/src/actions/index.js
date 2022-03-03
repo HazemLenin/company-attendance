@@ -45,7 +45,7 @@ export function remove_user() {
 }
 
 
-// prfile reducer
+// profile reducer
 
 export function load_profile(data) {
     return {
@@ -57,5 +57,29 @@ export function load_profile(data) {
 export function remove_profile() {
     return {
         type: 'REMOVE_profile'
+    }
+}
+
+
+// toasts reducer
+
+export function add_toast(data) {
+    return {
+        type: 'ADD_TOAST',
+        payload: data
+    }
+}
+
+export function hide_toast(data) {
+    return {
+        type: 'HIDE_TOAST',
+        payload: data
+    }
+}
+
+export function remove_toast(data) {
+    return {
+        type: 'REMOVE_TOAST',
+        payload: data
     }
 }

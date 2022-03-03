@@ -1,60 +1,109 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Table, Button } from 'react-bootstrap';
-import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { Container, Table, Button, Row, Col, Form } from 'react-bootstrap';
+import useAxios from '../hooks/useAxios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faPlus, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 function Employees() {
-    const [ data, setData ] = useState([{
-        id: '',
-        username: 'Loading',
-        email: 'Loading',
-        first_name: 'Loading',
-        last_name: 'Loading'
-    }]);
+    const [ data, setData ] = useState([]);
+    const [ loading, setLoading ] = useState(true);
+
+    const user = useSelector(state => state.user);
+    const api = useAxios();
 
     useEffect(() => {
-        axios.get('/api/users/', {headers: {Authorization: `Bearer ${JSON.parse(localStorage.getItem('authTokens')).access}`}})
+        api.get('/api/users/')
         .then(response => {
             setData(response.data);
+            setLoading(false);
         })
         .catch(err => {
             console.log(err);
         })
     }, []);
+
+    function updateList(url) {
+        setLoading(true);
+        api.get(url.replace(/https?:\/\/[^\/]+/i, ""), {params: {depth: 1}})
+        .then(response => {
+            setData(response.data);
+            setLoading(false);
+        })
+        .catch(err => {
+            setLoading(false);
+        });
+    }
+
+    function handleSearchChange(e) {
+        setLoading(true);
+        api.get('/api/users/', {params: {search: e.target.value}})
+        .then(response => {
+            setData(response.data);
+            setLoading(false);
+        })
+        .catch(err => {
+            setLoading(false);
+        });
+    }
+
     return (
         <Container>
             <h1>
                 <FontAwesomeIcon icon={faUsers} className="me-2" />
                 Employees
             </h1>
-            <Button variant="outline-success" className="mb-2" as={Link} to="/employees/new">
-                <FontAwesomeIcon icon={faPlus} className="me-2" />
-                Add Employee
-            </Button>
-            <Table bordered striped hover>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>First name</th>
-                        <th>Last name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((employee, i) => (
-                        <tr key={ employee.id }>
-                            <td>{ i + 1 }</td>
-                            <td><Link to={`/employees/${employee.id}`}>{ employee.username }</Link></td>
-                            <td>{ employee.email }</td>
-                            <td>{ employee.first_name }</td>
-                            <td>{ employee.last_name }</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+            { parseInt(user.role) === 1 && (
+                <Button variant="outline-success" className="mb-2" as={Link} to="/employees/new">
+                    <FontAwesomeIcon icon={faPlus} className="me-2" />
+                    Add New Employee
+                </Button>
+            )}
+            <Form onSubmit={e => e.preventDefault()}>
+                <Form.Label>Search</Form.Label>
+                <Form.Control type="text" name="search" placeholder="Search by ID/Username/First Name/Last Name/Email" onChange={handleSearchChange} />
+            </Form>
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
+                <>
+                    <Table bordered striped hover>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>First name</th>
+                                <th>Last name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.results.map(employee => (
+                                <tr key={ employee.id }>
+                                    <td>{ employee.id }</td>
+                                    <td><Link to={`/employees/${employee.id}`}>{ employee.username }</Link></td>
+                                    <td>{ employee.email }</td>
+                                    <td>{ employee.first_name }</td>
+                                    <td>{ employee.last_name }</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                    <Row>
+                        <Col>
+                            <Button className="float-start" onClick={e => updateList(data.previous)} disabled={!Boolean(data.previous)}>
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button className="float-end" onClick={e => updateList(data.next)} disabled={!Boolean(data.next)}>
+                                <FontAwesomeIcon icon={faChevronRight} />
+                            </Button>
+                        </Col>
+                    </Row>
+                </>
+            )}
         </Container>
     )
 }

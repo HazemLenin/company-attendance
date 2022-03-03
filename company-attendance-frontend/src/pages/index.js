@@ -9,4 +9,8 @@ export { default as Employees } from './Employees';
 export { default as NewEmployee } from './NewEmployee';
 export { default as Employee } from './Employee';
 export { default as EditEmployee } from './EditEmployee';
+export { default as Attendances } from './Attendances';
+export { default as NewAttendance } from './NewAttendance';
+export { default as Attendance } from './Attendance';
+export { default as EditAttendance } from './EditAttendance';
 export { default as PageNotFound } from './PageNotFound';

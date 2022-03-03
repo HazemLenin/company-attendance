@@ -7,11 +7,16 @@ from django.dispatch import receiver
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
+from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 # Create your models here.
 
 class User(AbstractUser):
+    first_name = models.CharField(_('first name'), max_length=150)
+    last_name = models.CharField(_('last name'), max_length=150)
     email = models.EmailField(_('email address'), unique=True)
 
     REQUIRED_FIELDS = [
@@ -45,7 +50,7 @@ def attending_code_generator():
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User, on_delete=models.RESTRICT, related_name='profile')
     birth_date = models.DateField()
     address = models.CharField(max_length=20)
     phone = models.CharField(max_length=20)
@@ -63,9 +68,14 @@ class Profile(models.Model):
 
 
 class Attendance(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='attendances')
-    time_in = models.DateTimeField()
+    user = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='attendances')  # null is true because of on_delete
+    time_in = models.DateTimeField(default=timezone.now, blank=True)
     time_out = models.DateTimeField(blank=True, null=True)
+    # We need the attendance to be like brackets, time in: means that employee
+    # is in company (and employee profile in_company field will be edited to be true)
+    # and the time out will be empty like what happens when someone writes an open bracket.
+    # Until the employee will leave the company, attendance object will be edited/updated and time_out will be filled,
+    # like what happens when someone writes the closed bracket
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -75,6 +85,13 @@ class Attendance(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+@receiver(post_save, sender=Attendance)
+def change_in_company(sender, instance, **kwargs):
+    profile = instance.user.profile
+    profile.in_company = False if instance.time_out else True
+    profile.save()
 
 
 @receiver(reset_password_token_created)
@@ -100,8 +117,10 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         'username': reset_password_token.user.username,
         'email': reset_password_token.user.email,
         'reset_password_url': "{}?token={}".format(
-            instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm')),
-            reset_password_token.key)
+            # instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm')),
+            'localhost:3000/password_reset/confirm',  # local test
+            reset_password_token.key
+        )
     }
 
     # render email text

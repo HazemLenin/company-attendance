@@ -1,10 +1,9 @@
 from rest_framework import serializers
 from .models import Profile, Attendance
 from django.contrib.auth.models import Group
-from .models import User
+from django.contrib.auth import get_user_model
 
-from django.conf import settings
-
+User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     role = serializers.CharField(source="groups.first.id")
@@ -13,9 +12,17 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name', 'is_active', 'role', 'profile')
         depth = 1
+        required_fields = [
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'role'
+        ]
+
+    # Update and create methods are checking for role input and assign it for the user because ModelSerializer doesn't support that
 
     def create(self, validated_data):
-
         group_id = int(validated_data['groups']['first']['id'])
 
         del validated_data["groups"]
@@ -50,6 +57,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class AttendanceSerializer(serializers.ModelSerializer):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.Meta.depth = self.context.get('depth', 0)
+
     class Meta:
         model = Attendance
         fields = '__all__'

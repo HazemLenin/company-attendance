@@ -8,7 +8,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartLine, faUserPlus, faRightFromBracket, faRightToBracket, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faUserPlus, faRightFromBracket, faRightToBracket, faUser, faUsers, faList, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar() {
 	const authTokens = useSelector(state => state.authTokens);
@@ -21,31 +21,45 @@ function Navbar() {
 				<BsNavbar.Toggle aria-controls="basic-navbar-nav" />
 				<BsNavbar.Collapse id="basic-navbar-nav">
 					{ authTokens && (
-						<Nav className="me-auto">
-							{user.role == 1 && <Nav.Link as={Link} to="/dashboard">
+						<Nav>
+							{parseInt(user.role) === 1 && <Nav.Link as={Link} to="/dashboard">
 								<FontAwesomeIcon icon={faChartLine} className="me-2" />
 								Dashboard
 							</Nav.Link>}
-							{(user.role == 1 || user.role == 2) && (
+							{(parseInt(user.role) === 1 || parseInt(user.role) === 2) && (
 								<NavDropdown title={<><FontAwesomeIcon icon={faUsers} className="me-2" />Employees</>} id="basic-nav-dropdown">
 									<NavDropdown.Item as={Link} to="/employees">
 										<FontAwesomeIcon icon={faUsers} className="me-2" />
 										Employees
 									</NavDropdown.Item>
-									<NavDropdown.Item as={Link} to="/employees/new">
-										<FontAwesomeIcon icon={faUserPlus} className="me-2" />
-										New Employee
+									{ parseInt(user.role) === 1 && (
+										<NavDropdown.Item as={Link} to="/employees/new">
+											<FontAwesomeIcon icon={faUserPlus} className="me-2" />
+											New Employee
+										</NavDropdown.Item>
+									)}
+								</NavDropdown>
+							)}
+							{(parseInt(user.role) === 1 || parseInt(user.role) === 2) && (
+								<NavDropdown title={<><FontAwesomeIcon icon={faList} className="me-2" />Attendances</>} id="basic-nav-dropdown">
+									<NavDropdown.Item as={Link} to="/attendances">
+										<FontAwesomeIcon icon={faList} className="me-2" />
+										Attendances
+									</NavDropdown.Item>
+									<NavDropdown.Item as={Link} to="/attendances/new">
+										<FontAwesomeIcon icon={faPlus} className="me-2" />
+										New Attendance
 									</NavDropdown.Item>
 								</NavDropdown>
 							)}
 						</Nav>
 					)}
-					<Nav>
+					<Nav className="ms-auto">
 						{ authTokens ?
 							<>
 								<Nav.Link as={Link} to="/profile">
 									<FontAwesomeIcon icon={faUser} className="me-2" />
-									Profile
+									{user.username}
 								</Nav.Link>
 								<Nav.Link as={Link} to="/logout">
 									<FontAwesomeIcon icon={faRightFromBracket} className="me-2" />

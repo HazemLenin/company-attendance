@@ -6,7 +6,7 @@ import {
   Routes,
   Route
 } from 'react-router-dom';
-import { Navbar } from './components';
+import { Navbar, ToastContainer } from './components';
 import {
   Home,
   Login,
@@ -19,43 +19,51 @@ import {
   Employees,
   NewEmployee,
   Employee,
+  Attendances,
+  NewAttendance,
+  Attendance,
+  EditAttendance,
   EditEmployee,
 } from './pages';
 import PrivateRoute from './PrivateRoute';
 import { useDispatch, useSelector } from 'react-redux';
 import { load_user } from './actions';
 import useAxios from './hooks/useAxios';
+import "react-datetime/css/react-datetime.css";
+
+
 function App() {
   // once authentication status is true, setup profile without using localState
   const isAuthenticated = useSelector(state => state.isAuthenticated);
+  const authTokens = useSelector(state => state.authTokens);
   const [ isLoading, setIsLoading ] = useState(true);
   const dispatch = useDispatch();
   const api = useAxios();
+  const [ error, SetError ] = useState(null);
   
   useEffect(() => {
-    /*
-      if user is authenticated, setup profile, and setup profile function will handle loading state
-      but if user isn't authenticated, turn off loading state to show the app
-    */
     if (isAuthenticated) {
-      api.get('/api/me/')
+      api.get('/api/users/me/')
       .then(response => {
           dispatch(load_user(response.data));
           setIsLoading(false);
       })
       .catch(err => {
-          console.log(err)
+          SetError(err.response?.data);
       })
     } else {
       setIsLoading(false);
     }
   
-  }, [isAuthenticated, api, dispatch]);
+  }, [isAuthenticated]); // TODO not updated
 
   if (isLoading) {
     return (
       <div className="loading-wrapper">
-        <h1>Loading...</h1>
+        <div className={`loading-container ${!error && 'pulse'}`}>
+          <h1 className="text-center">Loading...</h1>
+          <p className="text-danger">{ error }</p>
+        </div>
       </div>
     )
   }
@@ -86,6 +94,7 @@ function App() {
             </PrivateRoute>
           } />
 
+
           <Route exact path="/employees" element={
             <PrivateRoute roles={["managers", "receptionists"]}>
               <Employees />
@@ -105,10 +114,36 @@ function App() {
           } />
 
           <Route exact path="/employees/:id/edit" element={
-            <PrivateRoute roles={["managers", "receptionists"]}>
+            <PrivateRoute roles={["managers"]}>
               < EditEmployee />
             </PrivateRoute>
           } />
+
+
+          <Route exact path="/attendances" element={
+            <PrivateRoute roles={["managers", "receptionists"]}>
+              < Attendances />
+            </PrivateRoute>
+          } />
+
+          <Route exact path="/attendances/new" element={
+            <PrivateRoute roles={["managers", "receptionists"]}>
+              < NewAttendance />
+            </PrivateRoute>
+          } />
+
+          <Route exact path="/attendances/:id" element={
+            <PrivateRoute roles={["managers", "receptionists"]}>
+              < Attendance />
+            </PrivateRoute>
+          } />
+
+          <Route exact path="/attendances/:id/edit" element={
+            <PrivateRoute roles={["managers"]}>
+              < EditAttendance />
+            </PrivateRoute>
+          } />
+
 
           <Route exact path="/profile" element={
             <PrivateRoute>
@@ -118,6 +153,7 @@ function App() {
 
           <Route path="*" element={<PageNotFound />} />
           </Routes>
+        <ToastContainer />
       </div>
     </BrowserRouter>
   );

@@ -1,6 +1,7 @@
 from rest_framework.permissions import BasePermission
-from .models import User, Profile, Attendance
-
+from .models import Profile, Attendance
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class UserPermission(BasePermission):
 
@@ -78,6 +79,20 @@ class IsManager(BasePermission):
         user_group = request.user.groups.first()
 
         if user_group.name == 'managers':
+            return True
+        else:
+            return False
+
+
+class IsReceptionist(BasePermission):
+
+    def has_permission(self, request, view, *args, **kwargs):
+
+        assert request.user.groups.first(), 'User has problem with his category/group.'
+
+        user_group = request.user.groups.first()
+
+        if user_group.name == 'receptionists':
             return True
         else:
             return False

@@ -6,7 +6,7 @@
     width: 100vw;
 }
 
-.loading-wrapper > h1 {
+.loading-wrapper > .loading-container.pulse {
     animation: pulse 1s infinite;
 }
 

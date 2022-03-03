@@ -10,7 +10,7 @@ function Profile() {
       <Container>
             <h1>
                 <FontAwesomeIcon icon={faUser} className="me-2" />
-                Profile
+                {user.username}
             </h1>
           <Table striped bordered hover>
               <tbody>
@@ -45,6 +45,10 @@ function Profile() {
                 <tr>
                     <td>Phone Numbaer:</td>
                     <td>{user.profile.phone}</td>
+                </tr>
+                <tr>
+                    <td>Attending Code:</td>
+                    <td>{user.profile.attending_code}</td>
                 </tr>
             </tbody>
           </Table>
