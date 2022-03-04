@@ -4,9 +4,10 @@ import { useSelector } from 'react-redux';
 import { Container, Table, Button, Row, Col, Form } from 'react-bootstrap';
 import useAxios from '../hooks/useAxios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faPlus, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faList, faPlus, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import moment from 'moment';
 
-function Employees() {
+function Attendances() {
     const [ data, setData ] = useState([]);
     const [ loading, setLoading ] = useState(true);
 
@@ -14,7 +15,7 @@ function Employees() {
     const api = useAxios();
 
     useEffect(() => {
-        api.get('/api/users/')
+        api.get('/api/attendances/', {params: {depth: 1}})
         .then(response => {
             setData(response.data);
             setLoading(false);
@@ -26,7 +27,7 @@ function Employees() {
 
     function updateList(url) {
         setLoading(true);
-        api.get(url.replace(/https?:\/\/[^\/]+/i, ""))
+        api.get(url.replace(/https?:\/\/[^\/]+/i, ""), {params: {depth: 1}})
         .then(response => {
             setData(response.data);
             setLoading(false);
@@ -38,7 +39,7 @@ function Employees() {
 
     function handleSearchChange(e) {
         setLoading(true);
-        api.get('/api/users/', {params: {search: e.target.value}})
+        api.get('/api/attendances/', {params: {search: e.target.value, depth: 1}})
         .then(response => {
             setData(response.data);
             setLoading(false);
@@ -51,18 +52,18 @@ function Employees() {
     return (
         <Container>
             <h1>
-                <FontAwesomeIcon icon={faUsers} className="me-2" />
-                Employees
+                <FontAwesomeIcon icon={faList} className="me-2" />
+                Attendances
             </h1>
             { parseInt(user.role) === 1 && (
-                <Button variant="outline-success" className="mb-2" as={Link} to="/employees/new">
+                <Button variant="outline-success" className="mb-2" as={Link} to="/attendances/new">
                     <FontAwesomeIcon icon={faPlus} className="me-2" />
-                    Add New Employee
+                    Add New Attendances
                 </Button>
             )}
             <Form onSubmit={e => e.preventDefault()}>
                 <Form.Label>Search</Form.Label>
-                <Form.Control type="text" name="search" placeholder="Search by ID/Username/First Name/Last Name/Email" onChange={handleSearchChange} />
+                <Form.Control type="text" name="search" placeholder="Search by ID or attendance employee's Username/First Name/Last Name/Email" onChange={handleSearchChange} />
             </Form>
             {loading ? (
                 <p>Loading...</p>
@@ -72,20 +73,19 @@ function Employees() {
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>First name</th>
-                                <th>Last name</th>
+                                <th>Employee</th>
+                                <th>Time In</th>
+                                <th>Time Out</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {data.results.map(employee => (
-                                <tr key={ employee.id }>
-                                    <td>{ employee.id }</td>
-                                    <td><Link to={`/employees/${employee.id}`}>{ employee.username }</Link></td>
-                                    <td>{ employee.email }</td>
-                                    <td>{ employee.first_name }</td>
-                                    <td>{ employee.last_name }</td>
+                            {data.results.map(attendance => (
+                                <tr key={ attendance.id }>
+                                    <td>{ attendance.id }</td>
+                                    <td>{ attendance.user.first_name } { attendance.user.last_name}</td>
+                                    <td>{ moment(attendance.time_in).local().format("YYYY-MM-DD HH:mmZ") }</td>
+                                    <td>{ attendance.time_out && moment(attendance.time_out).local().format("YYYY-MM-DD HH:mmZ") }</td>
+                                    <td><Button as={Link} to={`/attendances/${attendance.id}`}>View</Button></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -108,4 +108,4 @@ function Employees() {
     )
 }
 
-export default Employees;
+export default Attendances;

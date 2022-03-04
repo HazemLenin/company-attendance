@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Container, Form, Button, Spinner } from 'react-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login_user, set_tokens, add_toast } from '../actions';
 import useAxios from '../hooks/useAxios';
 
 function Login() {
-    const isAuthenticated = useSelector(state => state.isAuthenticated);
     const dispatch = useDispatch();
 
     const [ username, setUsername ] = useState('');

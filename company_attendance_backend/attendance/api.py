@@ -126,13 +126,19 @@ class ManagerDashboard(APIView):
         # started in the day
         # ended in the day
 
-        avg_time_in_float = sum((attendance.time_in.hour + (attendance.time_in.minute / 60))  for attendance in # takes every time_in value from last 40 days attendances
-                                all_attendances_in_last_30_days) / all_attendances_in_last_30_days.count()
+        try:
+            avg_time_in_float = sum((attendance.time_in.hour + (attendance.time_in.minute / 60)) for attendance in
+                                    # takes every time_in value from last 40 days attendances
+                                    all_attendances_in_last_30_days) / all_attendances_in_last_30_days.count()
+
+            avg_time_out_float = sum((attendance.time_out.hour + (attendance.time_out.minute / 60)) for attendance in
+                                     # takes every time_in value from last 40 days attendances
+                                     all_attendances_in_last_30_days) / all_attendances_in_last_30_days.count()
+        except ZeroDivisionError:
+            avg_time_in_float = 0.0
+            avg_time_out_float = 0.0
 
         avg_time_in_timestamp = datetime.utcfromtimestamp(avg_time_in_float * 60 * 60)
-
-        avg_time_out_float = sum((attendance.time_out.hour + (attendance.time_out.minute / 60)) for attendance in # takes every time_in value from last 40 days attendances
-                                 all_attendances_in_last_30_days) / all_attendances_in_last_30_days.count()
 
         avg_time_out_timestamp = datetime.utcfromtimestamp(avg_time_out_float * 60 * 60)
 
@@ -156,8 +162,6 @@ class ManagerDashboard(APIView):
         top_3_users_serialized = UserSerializer(top_3_users, many=True).data
         for serialized_user in top_3_users_serialized:
             serialized_user['seconds'] = dict(users_total_seconds)[serialized_user['id']]
-
-
 
         return Response({
             'attending_chart_labels': attending_chart_labels,

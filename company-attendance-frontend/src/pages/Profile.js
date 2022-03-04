@@ -16,39 +16,39 @@ function Profile() {
               <tbody>
                 <tr>
                     <td>Username:</td>
-                    <td>{user.username}</td>
+                    <td>{user?.username}</td>
                 </tr>
                 <tr>
                     <td>Email:</td>
-                    <td>{user.email}</td>
+                    <td>{user?.email}</td>
                 </tr>
                 <tr>
                     <td>First Name:</td>
-                    <td>{user.first_name}</td>
+                    <td>{user?.first_name}</td>
                 </tr>
                 <tr>
                     <td>Last Name:</td>
-                    <td>{user.last_name}</td>
+                    <td>{user?.last_name}</td>
                 </tr>
                 <tr>
                     <td>Role:</td>
-                    <td>{user.role}</td>
+                    <td>{user?.role}</td>
                 </tr>
                 <tr>
                     <td>Birth Date:</td>
-                    <td>{user.profile.birth_date}</td>
+                    <td>{user?.profile?.birth_date}</td>
                 </tr>
                 <tr>
                     <td>Address:</td>
-                    <td>{user.profile.address}</td>
+                    <td>{user?.profile?.address}</td>
                 </tr>
                 <tr>
                     <td>Phone Numbaer:</td>
-                    <td>{user.profile.phone}</td>
+                    <td>{user?.profile?.phone}</td>
                 </tr>
                 <tr>
                     <td>Attending Code:</td>
-                    <td>{user.profile.attending_code}</td>
+                    <td>{user?.profile?.attending_code}</td>
                 </tr>
             </tbody>
           </Table>

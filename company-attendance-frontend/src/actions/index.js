@@ -56,7 +56,7 @@ export function load_profile(data) {
 
 export function remove_profile() {
     return {
-        type: 'REMOVE_profile'
+        type: 'REMOVE_PROFILE'
     }
 }
 
