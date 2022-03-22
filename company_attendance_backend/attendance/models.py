@@ -26,6 +26,17 @@ class User(AbstractUser):
     ]
 
 
+class CommonFields(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    # created_by = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='created_profiles')
+    # modified_by = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='modified_profiles')
+
+    class Meta:
+        abstract = True
+
+
 def attending_code_generator():
     code = get_random_string(length=10, allowed_chars='0123456789')
 
@@ -49,7 +60,7 @@ def attending_code_generator():
     return code
 
 
-class Profile(models.Model):
+class Profile(CommonFields):
     user = models.OneToOneField(User, on_delete=models.RESTRICT, related_name='profile')
     birth_date = models.DateField()
     address = models.CharField(max_length=20)
@@ -57,31 +68,22 @@ class Profile(models.Model):
     in_company = models.BooleanField(default=False)
     attending_code = models.CharField(max_length=10, blank=True, default=attending_code_generator, unique=True)
 
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    # created_by = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='created_profiles')
-    # modified_by = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='modified_profiles')
-
     def __str__(self):
         return self.user.username
 
 
-class Attendance(models.Model):
-    user = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='attendances')  # null is true because of on_delete
+class Attendance(CommonFields):
+    """
+    We need the attendance to be like brackets, time in: means that employee
+    is in company (and employee profile in_company field will be edited to be true)
+    and the time out will be empty like what happens when someone writes an open bracket.
+    Until the employee will leave the company, attendance object will be edited/updated and time_out will be filled,
+    like what happens when someone writes the closed bracket
+    """
+    user = models.ForeignKey(User, on_delete=models.RESTRICT,
+                             related_name='attendances')  # null is true because of on_delete
     time_in = models.DateTimeField(default=timezone.now, blank=True)
     time_out = models.DateTimeField(blank=True, null=True)
-    # We need the attendance to be like brackets, time in: means that employee
-    # is in company (and employee profile in_company field will be edited to be true)
-    # and the time out will be empty like what happens when someone writes an open bracket.
-    # Until the employee will leave the company, attendance object will be edited/updated and time_out will be filled,
-    # like what happens when someone writes the closed bracket
-
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    # created_by = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='created_attendances')
-    # modified_by = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='modified_attendances')
 
     def __str__(self):
         return self.user.username
@@ -107,9 +109,9 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     :return:
     """
     print("{}?token={}".format(
-            # instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm')),
-            'localhost:3000/password_reset/confirm',
-            reset_password_token.key
+        # instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm')),
+        'localhost:3000/password_reset/confirm',
+        reset_password_token.key
     ))
     # send an e-mail to the user
     context = {
