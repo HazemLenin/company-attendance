@@ -4,7 +4,11 @@
     <list default="true" id="16bbee20-e232-4b97-9f53-3f2c44ef8d88" name="Changes" comment="Edited README.md and requirements.txt">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/attendance/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/attendance/permissions.py" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/permissions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/attendance/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/company_attendance_backend/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/company_attendance_backend/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/company_attendance_backend/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/company_attendance_backend/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +46,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="full.screen.before.presentation.mode" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../README.md" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunManager">
     <configuration name="company_attendance_backend" type="PythonConfigurationType" factoryName="Python">

@@ -32,7 +32,7 @@ function PasswordResetConfirm() {
             return;
         }
 
-        api.post('/api/password_reset/confirm/', {token: searchParams.get('token'), password: password})
+        api.post('/api/v1/password_reset/confirm/', {token: searchParams.get('token'), password: password})
         .then(response => {
             setLoading(false);
             setValidated(true);

@@ -7,7 +7,7 @@ class UserPermission(BasePermission):
 
     def has_permission(self, request, view, *args, **kwargs):
 
-        assert request.user.groups.first(), 'User has problem with his category/group.'
+        assert request.user.groups.first(), 'User has problem with his role/group.'
 
         user_group = request.user.groups.first()
 
@@ -29,7 +29,7 @@ class ProfilePermission(BasePermission):
 
     def has_permission(self, request, view, *args, **kwargs):
 
-        assert request.user.groups.first(), 'User has problem with his category/group.'
+        assert request.user.groups.first(), 'User has problem with his role/group.'
 
         user_group = request.user.groups.first()
 
@@ -51,7 +51,7 @@ class AttendancePermission(BasePermission):
 
     def has_permission(self, request, view, *args, **kwargs):
 
-        assert request.user.groups.first(), 'User has problem with his category/group.'
+        assert request.user.groups.first(), 'User has problem with his role/group.'
 
         user_group = request.user.groups.first()
 
@@ -74,7 +74,7 @@ class IsManager(BasePermission):
 
     def has_permission(self, request, view, *args, **kwargs):
 
-        assert request.user.groups.first(), 'User has problem with his category/group.'
+        assert request.user.groups.first(), 'User has problem with his role/group.'
 
         user_group = request.user.groups.first()
 
@@ -88,7 +88,7 @@ class IsReceptionist(BasePermission):
 
     def has_permission(self, request, view, *args, **kwargs):
 
-        assert request.user.groups.first(), 'User has problem with his category/group.'
+        assert request.user.groups.first(), 'User has problem with his role/group.'
 
         user_group = request.user.groups.first()
 

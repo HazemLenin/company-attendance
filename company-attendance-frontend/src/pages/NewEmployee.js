@@ -10,7 +10,7 @@ function NewEmployee() {
     const [ userId, setUserId ] = useState(null);
     const [ userCreated, setUserCreated ] = useState(null);
     const [ errors, setErrors ] = useState(null);
-    const [ employee, setEmployee ] = useState({role: 3});
+    const [ employee, setEmployee ] = useState({role: "employees"}); // role is the only field that has initial value
     const [ loading, setLoading ] = useState(false);
     const [ validated, setValidated ] = useState(false);
     const api = useAxios();
@@ -21,7 +21,7 @@ function NewEmployee() {
         e.preventDefault();
         setLoading(true);
         setErrors({});
-        api.post('/api/users/', employee)
+        api.post('/api/v1/users/', employee)
         .then(response => {
             setUserId(response.data.id);
             setUserCreated(true);
@@ -41,7 +41,7 @@ function NewEmployee() {
     function handleProfileSubmit(e) {
         e.preventDefault();
         setLoading(true);
-        api.post('/api/profiles/', {...employee?.profile, user: userId})
+        api.post('/api/v1/profiles/', {...employee?.profile, user: userId})
         .then(response => {
             setLoading(false);
             setValidated(true);
@@ -54,7 +54,6 @@ function NewEmployee() {
         })
         .catch(err => {
             setLoading(false);
-            console.log(userId)
             setErrors(err.response?.data);
             dispatch(add_toast({
                 page: "New Employee",
@@ -72,13 +71,13 @@ function NewEmployee() {
                 <Form onSubmit={handleProfileSubmit} noValidate validated={validated}>
                     <Form.Group className="mb-2">
                         <Form.Label>Address</Form.Label>
-                        <Form.Control type="text" name="address" placeholder="Address" isInvalid={Boolean(errors?.profile?.address)} onChange={e => setEmployee({...employee, profile: {...employee.profile, address: e.target.value}})} required />
+                        <Form.Control type="text" name="address" placeholder="Address" isInvalid={Boolean(errors?.address)} onChange={e => setEmployee({...employee, profile: {...employee.profile, address: e.target.value}})} required />
                         <Form.Control.Feedback type="invalid">{errors?.address}</Form.Control.Feedback>
                     </Form.Group>
                     <Row className="mb-2">
                         <Form.Group as={Col}>
                             <Form.Label>Birth Date</Form.Label>
-                            <Datetime name="birth_date" dateFormat="YYYY-MM-DD" timeFormat="" onChange={e => setEmployee({...employee, profile: {...employee.profile, birth_date: e}})} required />
+                            <Datetime name="birth_date" dateFormat="YYYY-MM-DD" timeFormat="" onChange={e => setEmployee({...employee, profile: {...employee.profile, birth_date: e.format("YYYY-MM-DD")}})} required />
                             {errors?.birth_date && <p className="text-danger">{errors?.birth_date}</p>}
                         </Form.Group>
                         <Form.Group as={Col}>
@@ -119,10 +118,10 @@ function NewEmployee() {
                     </Form.Group>
                     <Form.Group className="mb-2">
                         <Form.Label>Role</Form.Label>
-                        <Form.Select name="role" isInvalid={Boolean(errors?.role)} value={3} onChange={e => setEmployee({...employee, role: e.target.value})} required>
-                            <option key={1} value={1}>Manager</option>
-                            <option key={2} value={2}>Receptionist</option>
-                            <option key={3} value={3}>employee</option>
+                        <Form.Select name="role" isInvalid={Boolean(errors?.role)} value="employees" onChange={e => setEmployee({...employee, role: e.target.value})} required>
+                            <option key={1} value="managers">Manager</option>
+                            <option key={2} value="receptionists">Receptionist</option>
+                            <option key={3} value="employees">Employee</option>
                         </Form.Select>
                         <Form.Control.Feedback type="invalid">{errors?.role}</Form.Control.Feedback>
                     </Form.Group>

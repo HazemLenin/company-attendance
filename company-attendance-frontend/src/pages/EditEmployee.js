@@ -20,7 +20,7 @@ function EditEmployee() {
     const { id } = useParams();
 
     useEffect(() => {
-        api.get(`/api/users/${id}/`)
+        api.get(`/api/v1/users/${id}/`)
         .then(response => {
             setEmployee(response.data);
             setLoadingUser(false);
@@ -42,7 +42,7 @@ function EditEmployee() {
         e.preventDefault();
         setLoading(true);
         setErrors({});
-        api.put(`/api/users/${employee.id}/`, employee)
+        api.put(`/api/v1/users/${employee.id}/`, employee)
         .then(response => {
             setEmployee(response.data);
             setLoading(false);
@@ -64,7 +64,7 @@ function EditEmployee() {
     function handleProfileSubmit(e) {
         e.preventDefault();
         setLoading(true);
-        api.put(`/api/profiles/${employee.profile.id}/`, employee.profile)
+        api.put(`/api/v1/profiles/${employee.profile.id}/`, employee.profile)
         .then(response => {
             setLoading(false);
             dispatch(add_toast({
@@ -148,9 +148,9 @@ function EditEmployee() {
                                     <Form.Group className="mb-2">
                                         <Form.Label>Role</Form.Label>
                                         <Form.Select name="role" isInvalid={Boolean(errors?.role)} value={employee?.role} onChange={e => setEmployee({...employee, role: e.target.value})} required>
-                                            <option key={1} value={1}>Manager</option>
-                                            <option key={2} value={2}>Receptionist</option>
-                                            <option key={3} value={3}>employee</option>
+                                            <option key={1} value="managers">Manager</option>
+                                            <option key={2} value="receptionists">Receptionist</option>
+                                            <option key={3} value="employees">Employee</option>
                                         </Form.Select>
                                         <Form.Control.Feedback type="invalid">{errors?.role}</Form.Control.Feedback>
                                     </Form.Group>

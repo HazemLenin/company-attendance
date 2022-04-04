@@ -20,7 +20,7 @@ function Employee() {
     const user = useSelector(state => state.user);
 
     useEffect(() => {
-        api.get(`/api/users/${id}/`)
+        api.get(`/api/v1/users/${id}/`)
         .then(response => {
             setEmployee(response.data);
             setLoading(false);
@@ -34,7 +34,7 @@ function Employee() {
     }, [])
 
     function handleActivationToggle(e) {
-        api.patch(`/api/users/${employee.id}/`, {is_active: !employee?.is_active})
+        api.patch(`/api/v1/users/${employee.id}/`, {is_active: !employee?.is_active})
         .then(response => {
             setEmployee(response.data)
             setShowActivationModal(false);
@@ -54,7 +54,7 @@ function Employee() {
     }
 
     function handleDelete(e) {
-        api.delete(`/api/users/${employee.id}/`)
+        api.delete(`/api/v1/users/${employee.id}/`)
         .then(response => {
             setShowDeletionModal(false);
             dispatch(add_toast({
@@ -122,7 +122,7 @@ function Employee() {
                                         <td>In Company</td>
                                         <td>{employee?.profile?.in_company ? 'Yes' : 'No'}</td>
                                     </tr>
-                                    { parseInt(user.role) === 1 && (
+                                    { user.role === "managers" && (
                                         <tr>
                                             <td>Attending Code</td>
                                             <td>{employee?.profile?.attending_code}</td>
@@ -130,7 +130,7 @@ function Employee() {
                                     )}
                                 </tbody>
                             </Table>
-                            {parseInt(user.role) === 1 && (
+                            { user.role === "managers" && (
                                 <>
                                     <Button variant="primary" className="me-2" as={Link} to={`/employees/${employee.id}/edit`}>Edit</Button>
                                     {employee.is_active ? (

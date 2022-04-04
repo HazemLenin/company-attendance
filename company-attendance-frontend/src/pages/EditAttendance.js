@@ -20,7 +20,7 @@ function EditAttendance() {
     const { id } = useParams();
 
     useEffect(() => {
-        api.get(`/api/attendances/${id}/`, {params: {depth: 1}})
+        api.get(`/api/v1/attendances/${id}/`, {params: {depth: 1}})
         .then(response => {
             setAttendance(response.data);
             setLoadingAttendance(true);
@@ -42,7 +42,7 @@ function EditAttendance() {
         e.preventDefault();
         setLoading(true);
         setErrors({});
-        api.put(`/api/attendances/${attendance.id}/`, {...attendance, user: attendance?.user?.id})
+        api.put(`/api/v1/attendances/${attendance.id}/`, {...attendance, user: attendance?.user?.id})
         .then(response => {
             setLoading(false);
             setValidated(true);

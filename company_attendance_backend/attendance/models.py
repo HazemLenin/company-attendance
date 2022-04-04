@@ -47,11 +47,7 @@ def attending_code_generator():
 
             code = get_random_string(length=10, allowed_chars='0123456789')
 
-            if Profile.objects.filter(attending_code=code).exists():
-
-                continue
-
-            else:
+            if not Profile.objects.filter(attending_code=code).exists():
 
                 return code
 
@@ -81,7 +77,7 @@ class Attendance(CommonFields):
     like what happens when someone writes the closed bracket
     """
     user = models.ForeignKey(User, on_delete=models.RESTRICT,
-                             related_name='attendances')  # null is true because of on_delete
+                             related_name='attendances')
     time_in = models.DateTimeField(default=timezone.now, blank=True)
     time_out = models.DateTimeField(blank=True, null=True)
 

@@ -43,7 +43,7 @@ function App() {
   
   useEffect(() => {
     if (isAuthenticated) {
-      api.get('/api/users/me/')
+      api.get('/api/v1/users/me/')
       .then(response => {
           dispatch(load_user(response.data));
           setIsLoading(false);

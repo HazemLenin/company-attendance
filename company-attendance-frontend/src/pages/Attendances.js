@@ -15,7 +15,7 @@ function Attendances() {
     const api = useAxios();
 
     useEffect(() => {
-        api.get('/api/attendances/', {params: {depth: 1}})
+        api.get('/api/v1/attendances/', {params: {depth: 1}})
         .then(response => {
             setData(response.data);
             setLoading(false);
@@ -39,7 +39,7 @@ function Attendances() {
 
     function handleSearchChange(e) {
         setLoading(true);
-        api.get('/api/attendances/', {params: {search: e.target.value, depth: 1}})
+        api.get('/api/v1/attendances/', {params: {search: e.target.value, depth: 1}})
         .then(response => {
             setData(response.data);
             setLoading(false);
@@ -55,7 +55,7 @@ function Attendances() {
                 <FontAwesomeIcon icon={faList} className="me-2" />
                 Attendances
             </h1>
-            { parseInt(user.role) === 1 && (
+            { user.role === "managers" && (
                 <Button variant="outline-success" className="mb-2" as={Link} to="/attendances/new">
                     <FontAwesomeIcon icon={faPlus} className="me-2" />
                     Add New Attendances

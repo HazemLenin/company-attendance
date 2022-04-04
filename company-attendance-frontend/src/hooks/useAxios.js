@@ -2,7 +2,7 @@ import axios from 'axios'
 import jwt_decode from "jwt-decode";
 import dayjs from 'dayjs';
 import { useSelector, useDispatch } from 'react-redux';
-import { set_tokens } from '../actions';
+import { set_tokens, logout_user, remove_user, remove_tokens, add_toast } from '../actions';
 
 // const baseURL = 'http://127.0.0.1:8000'
 function useAxios({includeTokens= true} = {}) {
@@ -28,8 +28,20 @@ function useAxios({includeTokens= true} = {}) {
                 return req
             }
         
-            const response = await axios.post(`/api/token/refresh/`, {
+            const response = await axios.post(`/api/v1/token/refresh/`, {
                 refresh: authTokens.refresh
+            }).catch(err => {
+                if (err.response.status === 401) {
+                    dispatch(remove_user());
+                    dispatch(remove_tokens());
+                    dispatch(logout_user());
+                    dispatch(add_toast({
+                        page: "Logout",
+                        content: `You logged out successfully.`,
+                        bg: "success",
+                        text: "text-white"
+                    }));
+                }
             });
         
             localStorage.setItem('authTokens', JSON.stringify(response.data))

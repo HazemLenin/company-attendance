@@ -25,7 +25,7 @@ function Login() {
 
         setLoading(true);
 
-        api.post('/api/token/', {
+        api.post('/api/v1/token/', {
             username: username,
             password: password
         })

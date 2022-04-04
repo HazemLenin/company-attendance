@@ -14,7 +14,7 @@ function Employees() {
     const api = useAxios();
 
     useEffect(() => {
-        api.get('/api/users/')
+        api.get('/api/v1/users/')
         .then(response => {
             setData(response.data);
             setLoading(false);
@@ -38,7 +38,7 @@ function Employees() {
 
     function handleSearchChange(e) {
         setLoading(true);
-        api.get('/api/users/', {params: {search: e.target.value}})
+        api.get('/api/v1/users/', {params: {search: e.target.value}})
         .then(response => {
             setData(response.data);
             setLoading(false);
@@ -54,7 +54,7 @@ function Employees() {
                 <FontAwesomeIcon icon={faUsers} className="me-2" />
                 Employees
             </h1>
-            { parseInt(user.role) === 1 && (
+            { user.role === "managers" && (
                 <Button variant="outline-success" className="mb-2" as={Link} to="/employees/new">
                     <FontAwesomeIcon icon={faPlus} className="me-2" />
                     Add New Employee

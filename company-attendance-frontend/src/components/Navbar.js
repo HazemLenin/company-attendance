@@ -22,17 +22,17 @@ function Navbar() {
 				<BsNavbar.Collapse id="basic-navbar-nav">
 					{ authTokens && (
 						<Nav>
-							{parseInt(user.role) === 1 && <Nav.Link as={Link} to="/dashboard">
+							{user.role === "managers" && <Nav.Link as={Link} to="/dashboard">
 								<FontAwesomeIcon icon={faChartLine} className="me-2" />
 								Dashboard
 							</Nav.Link>}
-							{(parseInt(user.role) === 1 || parseInt(user.role) === 2) && (
+							{(user.role === "managers" || user.role === "receptionists") && (
 								<NavDropdown title={<><FontAwesomeIcon icon={faUsers} className="me-2" />Employees</>} id="basic-nav-dropdown">
 									<NavDropdown.Item as={Link} to="/employees">
 										<FontAwesomeIcon icon={faUsers} className="me-2" />
 										Employees
 									</NavDropdown.Item>
-									{ parseInt(user.role) === 1 && (
+									{ user.role === "managers" && (
 										<NavDropdown.Item as={Link} to="/employees/new">
 											<FontAwesomeIcon icon={faUserPlus} className="me-2" />
 											New Employee
@@ -40,7 +40,7 @@ function Navbar() {
 									)}
 								</NavDropdown>
 							)}
-							{(parseInt(user.role) === 1 || parseInt(user.role) === 2) && (
+							{(user.role === "managers" || user.role === "receptionists") && (
 								<NavDropdown title={<><FontAwesomeIcon icon={faList} className="me-2" />Attendances</>} id="basic-nav-dropdown">
 									<NavDropdown.Item as={Link} to="/attendances">
 										<FontAwesomeIcon icon={faList} className="me-2" />

@@ -22,7 +22,7 @@ function PrivateRoute({ roles, children }) {
     }
 
     if (isAuthenticated && roles) {
-        if (!containsObject(GlobalRoles[user.role - 1], roles)) {
+        if (!containsObject(user.role, roles)) {
             return <Navigate to="/login" />
         }
     }

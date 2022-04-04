@@ -25,7 +25,7 @@ function NewAttendance() {
         e.preventDefault();
         setLoading(true);
         setErrors({});
-        api.post('/api/attendances/', attendance)
+        api.post('/api/v1/attendances/', attendance)
         .then(response => {
             setLoading(false);
             setValidated(true);
@@ -52,7 +52,7 @@ function NewAttendance() {
         e.preventDefault();
         setLoading(true);
         setErrors({});
-        api.post('/api/user_with_code/', {code: code})
+        api.post('/api/v1/user_with_code/', {code: code})
         .then(response => {
             setLoading(false);
             setValidated(true);
@@ -73,7 +73,7 @@ function NewAttendance() {
     }
 
     function handleEmployeeLeave(e) {
-        api.patch(`/api/attendances/${lastAttendance?.id}/`, {time_out: new Date()})
+        api.patch(`/api/v1/attendances/${lastAttendance?.id}/`, {time_out: new Date()})
         .then(response => {
             setLoading(false);
             setValidated(true);
@@ -121,7 +121,7 @@ function NewAttendance() {
             }));
         });
     }
-    if (parseInt(user.role) === 1) {
+    if (user.role === "managers") {
         return (
             <Container>
                 <h1>New Attendance</h1>

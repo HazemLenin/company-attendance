@@ -33,7 +33,7 @@ function ManagerDashboard() {
     const api = useAxios();
 
     useEffect(() => {
-        api.get('/api/dashboard/')
+        api.get('/api/v1/dashboard/')
         .then(response => {
             setData(response.data);
             setAttendingChartLabels(response.data.attending_chart_labels);

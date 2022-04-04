@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
-    role = serializers.CharField(source="groups.first.id")
+    role = serializers.CharField(source="groups.first.name")
 
     class Meta:
         model = User
@@ -23,13 +23,13 @@ class UserSerializer(serializers.ModelSerializer):
     # Update and create methods are checking for role input and assign it for the user because ModelSerializer doesn't support that
 
     def create(self, validated_data):
-        group_id = int(validated_data['groups']['first']['id'])
+        group_name = validated_data['groups']['first']['name']
 
         del validated_data["groups"]
 
         instance = super().create(validated_data)
 
-        group = Group.objects.get(id=group_id)
+        group = Group.objects.get(name=group_name)
 
         group.user_set.add(instance)
 
@@ -37,11 +37,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         if 'groups' in validated_data:
-            group_id = int(validated_data['groups']['first']['id'])
+            group_name = validated_data['groups']['first']['name']
 
             del validated_data["groups"]
 
-            group = Group.objects.get(id=group_id)
+            group = Group.objects.get(name=group_name)
 
             group.user_set.add(instance)
 

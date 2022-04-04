@@ -19,7 +19,7 @@ function Attendance() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        api.get(`/api/attendances/${id}/`, {params: {depth: 1}})
+        api.get(`/api/v1/attendances/${id}/`, {params: {depth: 1}})
         .then(response => {
             setAttendance(response.data);
             setLoading(false);
@@ -33,7 +33,7 @@ function Attendance() {
     }, [])
 
     function handleDelete(e) {
-        api.delete(`/api/attendances/${attendance?.id}/`)
+        api.delete(`/api/v1/attendances/${attendance?.id}/`)
         .then(response => {
             dispatch(add_toast({
                 page: `Employee ${attendance?.user?.first_name} ${attendance?.user?.last_name}'s attendance page.`,
@@ -78,7 +78,7 @@ function Attendance() {
                                     </tr>
                                 </tbody>
                             </Table>
-                            {parseInt(user.role) === 1 && (
+                            {user.role === "managers" && (
                                 <>
                                     <Button variant="primary" className="me-2" as={Link} to={`/attendances/${attendance.id}/edit`}>Edit</Button>
 

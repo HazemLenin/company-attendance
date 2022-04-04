@@ -16,7 +16,7 @@ function PasswordReset() {
         e.preventDefault();
         setLoading(true);
         setErrors({});
-        api.post('/api/password_reset/', {email: email})
+        api.post('/api/v1/password_reset/', {email: email})
         .then(response => {
             setLoading(false);
             setValidated(true);
