@@ -1,6 +1,5 @@
 # company-attendance
 Attendance system for companies created in about 17 days
-and about 12 hours to restore lost frontend files
 
 ## Technologies used
 Django for the backend (with drf for api)
@@ -24,7 +23,7 @@ Creating super user for adminstration
 ```commandline
 python manage.py createsuperuser
 ```
-Don't forget to create 3 groups with ("managers", "receptionists", "employees") names in the same order, add superuser to managers group and finally create profile for the superuser from django admin panel
+Don't forget to create 3 groups with these names ("managers", "receptionists", "employees") and add superuser to managers group and finally create profile for the superuser from django admin panel
 For the frontend go to frontend directory
 ```commandline
 # from the repo root
