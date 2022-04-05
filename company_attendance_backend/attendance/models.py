@@ -78,7 +78,7 @@ class Attendance(CommonFields):
     """
     user = models.ForeignKey(User, on_delete=models.RESTRICT,
                              related_name='attendances')
-    time_in = models.DateTimeField(default=timezone.now, blank=True)
+    time_in = models.DateTimeField(default=timezone.now, blank=True) # FIXME try to remove blank
     time_out = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):

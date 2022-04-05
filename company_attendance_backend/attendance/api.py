@@ -22,7 +22,7 @@ def daterange(start_date, end_date):
 class UserViewSet(viewsets.ModelViewSet):
     # queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated, UserPermission)
+    permission_classes = [IsAuthenticated & UserPermission]
 
     @action(detail=False, methods=['GET'],
             permission_classes=[IsAuthenticated])  # to make router don't contain pk in the url
@@ -52,13 +52,13 @@ class UserViewSet(viewsets.ModelViewSet):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = (IsAuthenticated, ProfilePermission)
+    permission_classes = [IsAuthenticated & ProfilePermission]
 
 
 class AttendanceViewSet(viewsets.ModelViewSet):
     queryset = Attendance.objects.all().order_by('-time_in')
     serializer_class = AttendanceSerializer
-    permission_classes = (IsAuthenticated, AttendancePermission)
+    permission_classes = [IsAuthenticated & AttendancePermission]
 
     def get_serializer_context(self):
         """
@@ -94,7 +94,7 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 
 
 class ManagerDashboard(APIView):
-    permission_classes = [IsManager]
+    permission_classes = [IsAuthenticated & IsManager]
 
     def get(self, request, format=None):
         attending_count = Profile.objects.filter(in_company=True).count()
@@ -176,7 +176,7 @@ class ManagerDashboard(APIView):
 
 
 class GetUserWithCode(APIView):
-    permission_classes = [IsReceptionist | IsManager]
+    permission_classes = [IsAuthenticated & (IsReceptionist | IsManager)]
 
     def post(self, request, format=None):
         code = request.data.get('code', '')

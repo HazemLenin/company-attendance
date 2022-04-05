@@ -23,7 +23,11 @@ Creating super user for adminstration
 ```commandline
 python manage.py createsuperuser
 ```
-Don't forget to create 3 groups with these names ("managers", "receptionists", "employees") and add superuser to managers group and finally create profile for the superuser from django admin panel
+Don't forget to load groups from db.json file
+```commandline
+python manage.py loaddata db.json
+```
+Add superuser to managers group and finally create profile for the superuser from (all can be done with django admin panel)
 For the frontend go to frontend directory
 ```commandline
 # from the repo root
