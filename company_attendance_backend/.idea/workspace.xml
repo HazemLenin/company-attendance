@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16bbee20-e232-4b97-9f53-3f2c44ef8d88" name="Changes" comment="Edited README.md and requirements.txt">
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/attendance/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/attendance/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/attendance/permissions.py" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/permissions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/company_attendance_backend/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/company_attendance_backend/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.json" beforeDir="false" afterPath="$PROJECT_DIR$/db.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
